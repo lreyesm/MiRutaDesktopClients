@@ -947,6 +947,7 @@ QJsonArray screen_tabla_tareas::parse_to_QjsonArray(QString path)
             for(int i=0; i < number_of_row-2; i++)
             {
                 QJsonObject o;
+                QString latitud, longitud;
                 row_content = lista.at(i);
                 if(row_content.at(0).trimmed().isEmpty() && row_content.at(1).trimmed().isEmpty()){
                     count_break++;
@@ -1000,6 +1001,16 @@ QJsonArray screen_tabla_tareas::parse_to_QjsonArray(QString path)
                             }
                         }
                     }
+                    else if(checkIfFieldIsValid(header)){
+                        if(header.contains("Latitud", Qt::CaseInsensitive)){
+                            QString contenido_en_excel = row_content.at(j);
+                            latitud = contenido_en_excel.trimmed();
+                        }
+                        if(header.contains("Longitud", Qt::CaseInsensitive)){
+                            QString contenido_en_excel = row_content.at(j);
+                            longitud = contenido_en_excel.trimmed();
+                        }
+                    }
                 }
                 o.insert(TIPORDEN, selection_Order);
                 o.insert(FechImportacion, current_datetime);
@@ -1018,6 +1029,9 @@ QJsonArray screen_tabla_tareas::parse_to_QjsonArray(QString path)
                 QString intervencion = Causa::getIntervencionFromCodeCausa(anomalia);
                 o.insert(causa_origen, anomalia + " - " + intervencion);
                 o.insert(accion_ordenada, Causa::getAccionOrdenadaFromCodeCausa(anomalia));
+                o.insert(AREALIZAR, Causa::getARealizarFromCodeCausa(anomalia));
+                //Intervención------------------------------------------------------------------------------------------------------------
+                o.insert(INTERVENCION, intervencion);
 
                 QString cal = o.value(calibre_toma).toString().trimmed();
                 QString longitud_desde_cal="";
@@ -1075,6 +1089,17 @@ QJsonArray screen_tabla_tareas::parse_to_QjsonArray(QString path)
                         cods_emplazamiento << cod_emplazamiento;
                     }
                 }
+
+                QString geocode = o.value(codigo_de_geolocalizacion).toString();
+                if(!checkIfFieldIsValid(geocode)){
+                    if(checkIfFieldIsValid(latitud) && checkIfFieldIsValid(longitud)){
+                        QString geocode = longitud + "," + latitud;
+                        o.insert(codigo_de_localizacion, geocode);
+                        o.insert(geolocalizacion, geocode);
+                        o.insert(url_geolocalizacion, "https://maps.google.com/?q=" + geocode);
+                    }
+                }
+
                 o.insert(status_tarea, state_requerida);
                 o.insert(GESTOR, gestor_de_aplicacion);
                 o.remove("");
