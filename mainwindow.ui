@@ -122,7 +122,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Tabla de Operarios</string>
+   <string>Contactar</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QLabel" name="label_4">

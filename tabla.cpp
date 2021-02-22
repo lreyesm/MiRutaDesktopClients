@@ -254,7 +254,7 @@ void Tabla::hideAllFilters(){
     ui->widget_filtro_tipoTarea->hide();
     ui->widget_filtros->hide();
     ui->widget_filtro_gestores->hide();
-//    ui->pb_buscar_trabajo->show();
+    //    ui->pb_buscar_trabajo->show();
 }
 
 void Tabla::uncheckAllRadioButtons(){
@@ -2086,13 +2086,13 @@ void Tabla::on_actionNueva_Tarea_triggered()
     connect(oneTareaScreen, &other_task_screen::updateITACs,this, &Tabla::updateITACsServerInfo);
     oneTareaScreen->toogleEdit(true, true);
     oneTareaScreen->setAttribute(Qt::WA_DeleteOnClose);
-//    QRect rect = QGuiApplication::screens().first()->geometry();
-//    if(rect.width() <= 1366
-//            && rect.height() <= 768){
-        oneTareaScreen->showMaximized();
-//    }else {
-//        oneTareaScreen->show();
-//    }
+    //    QRect rect = QGuiApplication::screens().first()->geometry();
+    //    if(rect.width() <= 1366
+    //            && rect.height() <= 768){
+    oneTareaScreen->showMaximized();
+    //    }else {
+    //        oneTareaScreen->show();
+    //    }
 }
 void Tabla::updateITACsServerInfo(){
     ui->statusbar->showMessage("Actualizando ITACs",3000);
@@ -2146,15 +2146,16 @@ void Tabla::openTareaX(QString numin){
     //    connect(oneTareaScreen, &other_task_screen::closing,oneTareaScreen, &other_task_screen::deleteLater);
 
     oneTareaScreen->setAttribute(Qt::WA_DeleteOnClose);
-//    QRect rect = QGuiApplication::screens().first()->geometry();
-//    if(rect.width() <= 1366
-//            && rect.height() <= 768){
-        oneTareaScreen->showMaximized();
-//    }else {
-//        oneTareaScreen->show();
-//    }
-    oneTareaScreen->populateView();
-    oneTareaScreen->createAutoPDF(false);
+    //    QRect rect = QGuiApplication::screens().first()->geometry();
+    //    if(rect.width() <= 1366
+    //            && rect.height() <= 768){
+    oneTareaScreen->showMaximized();
+    //    }else {
+    //        oneTareaScreen->show();
+    //    }
+    if(oneTareaScreen->populateView()){
+        oneTareaScreen->createAutoPDF(false);
+    }
 }
 void Tabla::abrirTareaX(int index){
     QJsonObject o;
@@ -2186,15 +2187,16 @@ void Tabla::abrirTareaX(int index){
     //    connect(oneTareaScreen, &other_task_screen::closing, oneTareaScreen, &other_task_screen::deleteLater);
 
     oneTareaScreen->setAttribute(Qt::WA_DeleteOnClose);
-//    QRect rect = QGuiApplication::screens().first()->geometry();
-//    if(rect.width() <= 1366
-//            && rect.height() <= 768){
-        oneTareaScreen->showMaximized();
-//    }else {
-//        oneTareaScreen->show();
-//    }
-    oneTareaScreen->populateView();
-    oneTareaScreen->createAutoPDF(false);
+    //    QRect rect = QGuiApplication::screens().first()->geometry();
+    //    if(rect.width() <= 1366
+    //            && rect.height() <= 768){
+    oneTareaScreen->showMaximized();
+    //    }else {
+    //        oneTareaScreen->show();
+    //    }
+    if(oneTareaScreen->populateView()){
+        oneTareaScreen->createAutoPDF(false);
+    }
 }
 void Tabla::getContadoresToCompleter(){
     emit abrirTablaContadores(false);
@@ -2667,7 +2669,7 @@ void Tabla::informarTareas(QString order)
                     qDebug() << jsonObject.value(TIPORDEN).toString();
 
                     if(oneTareaScreen != nullptr){
-                        oneTareaScreen->on_pb_close_clicked();
+                        oneTareaScreen->clearTask();
                     }
                     oneTareaScreen->setShowMesageBox(false);
 
@@ -3943,7 +3945,7 @@ void Tabla::on_actionAsignar_campos_comunes_triggered()
                         }
 
                         if(oneTareaScreen != nullptr){
-                            oneTareaScreen->on_pb_close_clicked();
+                            oneTareaScreen->clearTask();
                         }
                         oneTareaScreen->setShowMesageBox(false);
 
@@ -4118,7 +4120,7 @@ void Tabla::on_actionDescargar_Fotos()
 
             oneTareaScreen->populateView(true);
             oneTareaScreen->createAutoPDF(false, true);
-            oneTareaScreen->on_pb_close_clicked();
+            oneTareaScreen->clearTask();
         }
     }
     oneTareaScreen->deleteLater();
@@ -7604,11 +7606,16 @@ void Tabla::addItemsToPaginationInfo(int sizeShowing){
                                       + ((currentPages==0)?"1":QString::number(currentPages)));
     ui->l_current_pagination->hideSpinnerList();
 
-    ui->l_cantidad_de_tareas->setText("Mostrando "
-                                      + (QString::number(((currentPage - 1) * limit_pagination) + 1) + "-"
-                                         + (QString::number(sizeShowing + ((currentPage - 1) * limit_pagination)))
-                                         + " de " + QString::number(countTareas))
-                                      /*+ " " + ((sizeShowing != 1)?"tareas":"tarea")*/);
+    if(countTareas != 0){
+        ui->l_cantidad_de_tareas->setText("Mostrando "
+                                          + (QString::number(((currentPage - 1) * limit_pagination) + 1) + "-"
+                                             + (QString::number(sizeShowing + ((currentPage - 1) * limit_pagination)))
+                                             + " de " + QString::number(countTareas))
+                                          /*+ " " + ((sizeShowing != 1)?"tareas":"tarea")*/);
+    }
+    else{
+        ui->l_cantidad_de_tareas->setText("No hay resultados");
+    }
     checkPaginationButtons();
 }
 

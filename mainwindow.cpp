@@ -339,7 +339,6 @@ void MainWindow::hideThisWindow(){
 }
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    on_pb_cruz_clicked();
     QWidget::closeEvent(event);
 }
 

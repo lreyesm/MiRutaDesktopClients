@@ -93,6 +93,7 @@ public:
 
     static void showInExplorer(const QString &path);
 
+    static void setDelay(int delay_ms);
 signals:
     void script_excecution_result(int);
 

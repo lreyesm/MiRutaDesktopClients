@@ -17,6 +17,13 @@ GlobalFunctions::GlobalFunctions(QObject *parent, QString empresa) : QObject(par
 {
     this->empresa = empresa_de_aplicacion;
 }
+
+void GlobalFunctions::setDelay(int delay_ms){
+    QEventLoop loop;
+    QTimer::singleShot(delay_ms, &loop, &QEventLoop::quit);
+    loop.exec();
+}
+
 QString GlobalFunctions::readEmpresaSelected(){
 //    QString empresa = "";
 //    QFile data_base_empresa_selected(empresa_selected_file); // ficheros .dat se puede utilizar formato txt tambien
