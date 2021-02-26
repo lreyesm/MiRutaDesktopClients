@@ -10,7 +10,7 @@ static QString gestor_de_aplicacion = "Ayuntamiento Hernani";
 //static QString empresa_de_aplicacion = "PRUEBA";//Poner empresa MRAGUAS SL
 //static QString gestor_de_aplicacion = "CABB";//***************************OJO cambiar a Ayuntamiento Hernani***************************//
 
-static QString versionMiRuta = "V1.2.7";
+static QString versionMiRuta = "V1.2.8";
 
 static QColor color_blue_app = QColor(54,141,206);
 static QString limite_archivos_en_servidor = "256Mb";
